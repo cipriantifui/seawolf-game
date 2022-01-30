@@ -57,7 +57,8 @@ class Battle implements BattleInterface
     public function initiateDefenceAction($action)
     {
         if($this->nrOfAttacks >= count($this->enemyPlayers)) {
-            $this->log .= 'The battle is finish.';
+            $this->actionLog = 'The battle is finish.';
+            return;
         }
 
         $enemy = $this->enemyPlayers[$this->nrOfAttacks];
@@ -68,18 +69,32 @@ class Battle implements BattleInterface
 
         $val = $this->player->floatOrDive($action);
 
-        if($this->player->getCurrentDepth() >= $enemy->getCurrentDepth() - $range && $this->player->getCurrentDepth() <= $enemy->getCurrentDepth() + $range) {
+        $this->determineIfAttackIsAvoided($enemy, $range, $damage, $action, $val, $enemyAttack, $enemyAttackDirection);
+
+        $this->nrOfAttacks++;
+    }
+
+    /**
+     * @param mixed $enemy
+     * @param $range
+     * @param float|int $damage
+     * @param $action
+     * @param $val
+     * @param $enemyAttack
+     * @param string $enemyAttackDirection
+     */
+    public function determineIfAttackIsAvoided($enemy, $range, int $damage, $action, $val, $enemyAttack, string $enemyAttackDirection): void
+    {
+        if ($this->player->getCurrentDepth() >= $enemy->getCurrentDepth() - $range && $this->player->getCurrentDepth() <= $enemy->getCurrentDepth() + $range) {
             $this->player->setDamage($damage);
-            $this->actionLog = 'Incorrect :( You’ve taken '.$damage.' damage points, '. ($action === "dive" ? "diving" : "floating"). ' ' . $val.'m.' . PHP_EOL . PHP_EOL;
-            $this->attackLog .= 'The ' . $enemyAttack->getClassName() .' attack received from the ' . $enemyAttackDirection . ' launched by the ' . $enemy->getName() . ' that caused ' . $damage . ' damage.' . PHP_EOL;
+            $this->actionLog = 'Incorrect :( You’ve taken ' . $damage . ' damage points, ' . ($action === "dive" ? "diving" : "floating") . ' ' . $val . 'm.' . PHP_EOL . PHP_EOL;
+            $this->attackLog .= 'The ' . $enemyAttack->getClassName() . ' attack received from the ' . $enemyAttackDirection . ' launched by the ' . $enemy->getName() . ' that caused ' . $damage . ' damage.' . PHP_EOL;
             $this->isLastAttackSuccessful = true;
             $this->successfulyAttack++;
         } else {
-            $this->actionLog = 'Correct ! You dodged the hit, ' . ($action === "dive" ? "diving" : "floating"). ' ' .$val.'m.' . PHP_EOL . PHP_EOL;
+            $this->actionLog = 'Correct ! You dodged the hit, ' . ($action === "dive" ? "diving" : "floating") . ' ' . $val . 'm.' . PHP_EOL . PHP_EOL;
             $this->isLastAttackSuccessful = false;
         }
-
-        $this->nrOfAttacks++;
     }
 
     /**
@@ -144,5 +159,37 @@ class Battle implements BattleInterface
     {
         $bearing = getBearingBetweenPoints( $playerCoordinates, $enemyCoordinates);
         return getCompassDirection( $bearing );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlayer()
+    {
+        return $this->player;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnemyPlayers()
+    {
+        return $this->enemyPlayers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNrOfAttacks()
+    {
+        return $this->nrOfAttacks;
+    }
+
+    /**
+     * @param mixed $nrOfAttacks
+     */
+    public function setNrOfAttacks($nrOfAttacks): void
+    {
+        $this->nrOfAttacks = $nrOfAttacks;
     }
 }

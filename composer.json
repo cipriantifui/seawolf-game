@@ -6,9 +6,11 @@
         "files": ["core/helpers.php"]
     },
     "require": {
-        "phpunit/phpunit": "^9.5",
         "composer/composer": "^2.2",
         "ext-readline": "*",
         "kwn/number-to-words": "^1.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
     }
 }
