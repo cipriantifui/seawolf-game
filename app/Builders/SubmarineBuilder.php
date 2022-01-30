@@ -27,7 +27,7 @@ class SubmarineBuilder implements SubmarineBuilderInterface
         $this->ship->setDamage(0);
         $this->ship->setMaxDepth(300);
         $this->ship->setWeight(1700);
-        $this->ship->setCoordinates("42°40'01.2'N 175°35'22.4'W");
+        $this->ship->setCoordinates(array( 'lat' => 42.40044, 'lng' => 175.35283));
         $this->ship->setCurrentDepth(0);
         $this->ship->setAttackTypes($attack);
     }
@@ -43,7 +43,7 @@ class SubmarineBuilder implements SubmarineBuilderInterface
         $this->ship->setDamage(0);
         $this->ship->setMaxDepth(800);
         $this->ship->setWeight(1700);
-        $this->ship->setCoordinates("42°40'01.2'N 175°35'22.4'W");
+        $this->ship->setCoordinates(array( 'lat' => 42.40044, 'lng' => 175.35483));
         $this->ship->setCurrentDepth(rand(100, 300));
         $this->ship->setAttackTypes($attack);
     }
@@ -59,7 +59,7 @@ class SubmarineBuilder implements SubmarineBuilderInterface
         $this->ship->setDamage(0);
         $this->ship->setMaxDepth(700);
         $this->ship->setWeight(2300);
-        $this->ship->setCoordinates("42°40'05.4'N 175°35'27.3'W");
+        $this->ship->setCoordinates(array( 'lat' => 42.40044, 'lng' => 175.35225));
         $this->ship->setCurrentDepth(rand(50, 300));
         $this->ship->setAttackTypes($attack);
     }
@@ -75,7 +75,7 @@ class SubmarineBuilder implements SubmarineBuilderInterface
         $this->ship->setDamage(0);
         $this->ship->setMaxDepth(1000);
         $this->ship->setWeight(2700);
-        $this->ship->setCoordinates("42°40'15.9'N 175°35'47.1'W");
+        $this->ship->setCoordinates(array( 'lat' => 42.40244, 'lng' => 175.35283));
         $this->ship->setCurrentDepth(rand(0, 300));
         $this->ship->setAttackTypes($attack);
     }

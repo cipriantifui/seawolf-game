@@ -64,13 +64,14 @@ class Battle implements BattleInterface
         $enemyAttack = $enemy->getAttackTypes();
         $damage = $this->isLastAttackSuccessful ? $enemyAttack->getDamage() * 2 : $enemyAttack->getDamage();
         $range = $enemyAttack->getRange();
+        $enemyAttackDirection = $this->calculateAttackDirection($this->player->getCoordinates(), $enemy->getCoordinates());
 
         $val = $this->player->floatOrDive($action);
 
         if($this->player->getCurrentDepth() >= $enemy->getCurrentDepth() - $range && $this->player->getCurrentDepth() <= $enemy->getCurrentDepth() + $range) {
             $this->player->setDamage($damage);
             $this->actionLog = 'Incorrect :( You’ve taken '.$damage.' damage points, '. ($action === "dive" ? "diving" : "floating"). ' ' . $val.'m.' . PHP_EOL . PHP_EOL;
-            $this->attackLog .= 'The ' . $enemyAttack->getClassName() .' attack received from the west launched by the ' . $enemy->getName() . ' that caused ' . $damage . ' damage.' . PHP_EOL;
+            $this->attackLog .= 'The ' . $enemyAttack->getClassName() .' attack received from the ' . $enemyAttackDirection . ' launched by the ' . $enemy->getName() . ' that caused ' . $damage . ' damage.' . PHP_EOL;
             $this->isLastAttackSuccessful = true;
             $this->successfulyAttack++;
         } else {
@@ -89,12 +90,13 @@ class Battle implements BattleInterface
     {
         $enemy = $this->enemyPlayers[$this->nrOfAttacks];
         $enemyAttack = $enemy->getAttackTypes();
+        $enemyAttackDirection = $this->calculateAttackDirection($this->player->getCoordinates(), $enemy->getCoordinates());
 
         $numberToWords = new \NumberToWords\NumberToWords();
         $numberToWords = $numberToWords->getNumberTransformer('en');
         $attackNumberTxt = $numberToWords->toWords($this->nrOfAttacks + 1);
 
-        return 'The number ' . $attackNumberTxt . ' attack!' . PHP_EOL .'You are being hit from the East with a ' . $enemyAttack->getClassName() . ', what is your action, Captain ?' . PHP_EOL;
+        return 'The number ' . $attackNumberTxt . ' attack!' . PHP_EOL .'You are being hit from the '.$enemyAttackDirection.' with a ' . $enemyAttack->getClassName() . ', what is your action, Captain ?' . PHP_EOL;
     }
 
     /**
@@ -131,5 +133,16 @@ class Battle implements BattleInterface
     public function getActionLog()
     {
         return $this->actionLog;
+    }
+
+    /**
+     * @param $playerCoordinates
+     * @param $enemyCoordinates
+     * @return string
+     */
+    private function calculateAttackDirection($playerCoordinates, $enemyCoordinates)
+    {
+        $bearing = getBearingBetweenPoints( $playerCoordinates, $enemyCoordinates);
+        return getCompassDirection( $bearing );
     }
 }
