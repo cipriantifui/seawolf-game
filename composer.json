@@ -1,5 +1,13 @@
 {
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    },
     "require": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "composer/composer": "^2.2",
+        "ext-readline": "*",
+        "kwn/number-to-words": "^1.13"
     }
 }
