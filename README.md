@@ -4,12 +4,12 @@ This is a mini game (command-line application) in which the submarine you are ca
 
 Setup project
 
-composer update
+<strong>composer update</strong>
 
 To run app need to access cmd console, go to the game folder and execute:
 
-php -f index.php
+<strong>php -f index.php</strong>
 
 To run test just run command, ex:
 
-./vendor/bin/phpunit tests
+<strong>./vendor/bin/phpunit tests</strong>
