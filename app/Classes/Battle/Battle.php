@@ -60,7 +60,7 @@ class Battle implements BattleInterface
     {
         if($this->nrOfAttacks >= count($this->enemyPlayers)) {
             $this->actionLog = 'The battle is finish.';
-            return;
+            return false;
         }
 
         $enemy = $this->enemyPlayers[$this->nrOfAttacks];
@@ -71,22 +71,17 @@ class Battle implements BattleInterface
 
         $val = $this->player->floatOrDive($action);
 
-        $this->determineIfAttackIsAvoided($enemy, $range, $damage, $action, $val, $enemyAttack, $enemyAttackDirection);
-
         $this->nrOfAttacks++;
+
+        return $this->determineIfAttackIsAvoided($enemy, $range, $damage, $action, $val, $enemyAttack, $enemyAttackDirection);
+
     }
 
     /**
      * This function determines whether the attack is successfully avoided
      * @param mixed $enemy
-     * @param $range
-     * @param int $damage
-     * @param $action
-     * @param $val
-     * @param $enemyAttack
-     * @param string $enemyAttackDirection
      */
-    public function determineIfAttackIsAvoided($enemy, $range, int $damage, $action, $val, $enemyAttack, string $enemyAttackDirection): void
+    public function determineIfAttackIsAvoided($enemy, $range, int $damage, $action, $val, $enemyAttack, string $enemyAttackDirection): bool
     {
         if ($this->player->getCurrentDepth() >= $enemy->getCurrentDepth() - $range && $this->player->getCurrentDepth() <= $enemy->getCurrentDepth() + $range) {
             $this->player->setDamage($damage);
@@ -94,9 +89,11 @@ class Battle implements BattleInterface
             $this->attackLog .= 'The ' . $enemyAttack->getClassName() . ' attack received from the ' . $enemyAttackDirection . ' launched by the ' . $enemy->getName() . ' that caused ' . $damage . ' damage.' . PHP_EOL;
             $this->isLastAttackSuccessful = true;
             $this->successfulyAttack++;
+            return false;
         } else {
             $this->actionLog = 'Correct ! You dodged the hit, ' . ($action === "dive" ? "diving" : "floating") . ' ' . $val . 'm.' . PHP_EOL . PHP_EOL;
             $this->isLastAttackSuccessful = false;
+            return true;
         }
     }
 
@@ -109,12 +106,9 @@ class Battle implements BattleInterface
         $enemy = $this->enemyPlayers[$this->nrOfAttacks];
         $enemyAttack = $enemy->getAttackTypes();
         $enemyAttackDirection = $this->calculateAttackDirection($this->player->getCoordinates(), $enemy->getCoordinates());
+        $attackNumberTxt = numberToWord($this->nrOfAttacks + 1);
 
-        $numberToWords = new \NumberToWords\NumberToWords();
-        $numberToWords = $numberToWords->getNumberTransformer('en');
-        $attackNumberTxt = $numberToWords->toWords($this->nrOfAttacks + 1);
-
-        return 'The number ' . $attackNumberTxt . ' attack!' . PHP_EOL .'You are being hit from the '.$enemyAttackDirection.' with a ' . $enemyAttack->getClassName() . ', what is your action, Captain ?' . PHP_EOL;
+        return 'The number ' . $attackNumberTxt . ' attack!' . PHP_EOL .'You are being hit from the '.$enemyAttackDirection.' with a ' . $enemyAttack->getClassName() . ', what is your action, Captain?' . PHP_EOL;
     }
 
     /**
@@ -133,7 +127,8 @@ class Battle implements BattleInterface
     public function getGameEndInfos()
     {
         if($this->successfulyAttack > 0) {
-            $infoText = 'Capitan the game is lost, ' . $this->successfulyAttack . ' of the enemy attacks were successful' . PHP_EOL;
+            $attackNumberTxt = numberToWord($this->successfulyAttack);
+            $infoText = 'Capitan the game is lost. You were hit by ' . $attackNumberTxt . ' of the enemy attacks.' . PHP_EOL;
             $infoText.= $this->attackLog;
             $infoText.= 'Your submarine, ' . $this->player->getName() . ' received a total of ' . $this->player->getDamage() . ' damage and is at a depth of ' . $this->player->getCurrentDepth() . 'm.' . PHP_EOL . PHP_EOL;
         } else {

@@ -10,31 +10,31 @@ if($isRunningFromBrowser) {
 $battle = new Battle(new SubmarineBuilder(new WeaponBuilder()));
 $battle->initBattle();
 
-print($battle->getActionLog());
+colorLog($battle->getActionLog(), 'i');
 
 $input = readline('Enter the first action (ex: dive 100): ');
 list($action, $val) = count(explode(' ', $input)) < 2 ? ['', ''] : explode(' ', $input);
 
 if(strtolower($action) !== 'dive' || isset($val) && is_numeric($val) == false) {
-    exit('Wrong command!!!. Note: the only action can be is dive with val (ex: dive 100).' . PHP_EOL . PHP_EOL);
+    colorLog('Wrong command!!!. Note: the only action can be is dive with val (ex: dive 100).' . PHP_EOL . PHP_EOL, 'e');
+    exit();
 }
 
 $battle->startBattle($action, $val);
 
-print($battle->getActionLog());
+colorLog($battle->getActionLog(), 's');
 
 for($i = 0; $i < $battle->getNumberOfAttacks(); $i++) {
 
-    print($battle->getInfoAttack());
+    colorLog($battle->getInfoAttack(), 'i');
 
     if(strtolower($action) !== 'dive' && strtolower($action) !== 'float') {
-        exit('Wrong command!!!. Note: the only actions can be to float or dive.' . PHP_EOL . PHP_EOL);
+        colorLog('Wrong command!!!. Note: the only actions can be to float or dive.' . PHP_EOL . PHP_EOL, 'e');
     }
     $action = readline('Input your action (dive or float): ');
 
-    $battle->initiateDefenceAction($action);
-
-    print($battle->getActionLog());
+    $isSuccessfullyDefence = $battle->initiateDefenceAction($action);
+    colorLog($battle->getActionLog(), $isSuccessfullyDefence ? 's' : 'w');
 }
 
-print($battle->getGameEndInfos());
+colorLog($battle->getGameEndInfos(), 'i');
