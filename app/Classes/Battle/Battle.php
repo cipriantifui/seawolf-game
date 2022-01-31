@@ -77,9 +77,10 @@ class Battle implements BattleInterface
     }
 
     /**
+     * This function determines whether the attack is successfully avoided
      * @param mixed $enemy
      * @param $range
-     * @param float|int $damage
+     * @param int $damage
      * @param $action
      * @param $val
      * @param $enemyAttack
