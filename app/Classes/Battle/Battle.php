@@ -36,7 +36,9 @@ class Battle implements BattleInterface
         $this->submarineBuilder->buildEnemySubmarine3();
         $this->enemyPlayers[] = $this->submarineBuilder->getSubmarine();
 
-        $this->actionLog = 'Your sonar operator detects 3 enemies submarines coming at you from different directions.' .PHP_EOL;
+        $this->actionLog = 'You are the Captain of the USS Nautilus, an Ohio class submarine, in service with the United States Navy.' .PHP_EOL;
+        $this->actionLog.= 'Your approximate location at this time is 42°40`04.4"N 175°35`28.3”W, somewhere in the northern Pacific Ocean cruising at sea level (0m).' . PHP_EOL;
+        $this->actionLog.= 'Your sonar operator detects 3 enemies submarines coming at you from different directions.' . PHP_EOL;
     }
 
     /**
